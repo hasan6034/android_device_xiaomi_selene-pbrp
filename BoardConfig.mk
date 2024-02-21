@@ -165,3 +165,6 @@ TW_INCLUDE_FBE_METADATA_DECRYPT := true
 PB_DISABLE_DEFAULT_DM_VERITY := true
 PB_TORCH_PATH := "/sys/class/leds/flashlight"
 PB_TORCH_MAX_BRIGHTNESS := 1
+
+# Vibrator
+TW_LEDS_HAPTICS_DIR := /sys/devices/platform/odm/odm:vibrator@0/leds/vibrator
