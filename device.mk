@@ -5,18 +5,21 @@ AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
     POSTINSTALL_PATH_system=system/bin/otapreopt_script \
     FILESYSTEM_TYPE_system=ext4 \
-    POSTINSTALL_OPTIONAL_system=true
+    POSTINSTALL_OPTIONAL_system=true\
+    RUN_POSTINSTALL_vendor=true \
+    POSTINSTALL_PATH_vendor=bin/checkpoint_gc \
+    FILESYSTEM_TYPE_vendor=ext4 \
+    POSTINSTALL_OPTIONAL_vendor=true
 
-# Virtual A/B
+# Enable Virtual A/B
 ENABLE_VIRTUAL_AB := true
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch.mk)
 
 # Boot control HAL
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-service \
-    android.hardware.boot@1.2-mtkimpl \
-    android.hardware.boot@1.2-mtkimpl.recovery \
-    bootctrl.$(PRODUCT_PLATFORM).recovery
+    android.hardware.boot@1.2-impl \
+    android.hardware.boot@1.2-impl.recovery
 
 PRODUCT_PACKAGES_DEBUG += \
     update_engine_client
@@ -39,19 +42,32 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
 # fastbootd
 PRODUCT_PACKAGES += \
-    android.hardware.fastboot@1.0-impl-mock \
+    android.hardware.fastboot@1.1-impl-mock \
     fastbootd
 
-# Additional Libraries
+PRODUCT_VENDOR_PROPERTIES += \
+    ro.hardware.gatekeeper=beanpod
+
+# Additional binaries & libraries needed for recovery
 TARGET_RECOVERY_DEVICE_MODULES += \
     libkeymaster4 \
-    libkeymaster41 \
     libpuresoftkeymasterdevice
 
-RECOVERY_LIBRARY_SOURCE_FILES += \
+TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster41.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so
+
+# Gatekeeper
+PRODUCT_PACKAGES += \
+    android.hardware.gatekeeper@1.0-service-recovery \
+    android.hardware.gatekeeper@1.0-impl-recovery
+
+PRODUCT_PACKAGES += \
+    libshim_beanpod
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    keymaster_ver=4.0 \
+    persist.sys.fuse.passthrough.enable=true
 
 # Health HAL
 PRODUCT_PACKAGES += \
