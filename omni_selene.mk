@@ -16,6 +16,6 @@ $(call inherit-product, vendor/pb/config/common.mk)
 
 PRODUCT_DEVICE := selene
 PRODUCT_NAME := omni_selene
-PRODUCT_BRAND := Redmi
+PRODUCT_BRAND := Xiaomi
 PRODUCT_MODEL := Redmi 10
 PRODUCT_MANUFACTURER := Xiaomi
