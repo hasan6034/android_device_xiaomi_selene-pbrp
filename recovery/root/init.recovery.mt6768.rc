@@ -55,3 +55,7 @@ on property:twrp.decrypt.done=true
 on boot
     start boot-hal-1-2
     start health-hal-2-1
+
+# Enable DT2W
+on post-fs
+    write /sys/devices/platform/11007000.i2c0/i2c-0/0-0038/fts_gesture_mode "1"
